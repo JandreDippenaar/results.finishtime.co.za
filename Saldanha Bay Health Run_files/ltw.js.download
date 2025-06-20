@@ -1,0 +1,71 @@
+﻿function StartCountDown() {
+
+    if (document.getElementById("ctl00_Content_Main_docount") != null) {
+        var doCount = document.getElementById("ctl00_Content_Main_docount").value;
+        if (doCount == 1) {
+            days = document.getElementById("ctl00_Content_Main_countdowndays").value;
+            hrs = document.getElementById("ctl00_Content_Main_countdownhrs").value;
+            min = document.getElementById("ctl00_Content_Main_countdownmin").value;
+            sec = document.getElementById("ctl00_Content_Main_countdownsec").value;
+            if (days > 0 || hrs > 0 || min > 0 || sec > 0)
+                Countdown(days, hrs, min, sec);
+        }
+    }
+}
+
+function Countdown(days, hrs, min, sec) {
+
+    document.getElementById("ctl00_Content_Main_lblCountdownTime").innerHTML = hrs + ":" + min + ":" + sec;
+    sec = sec - 1;
+    if (sec < 0) {
+        sec = 59;
+        min = min - 1;
+    }
+
+    if (min < 0) {
+        min = 59;
+        hrs = hrs - 1;
+    }
+
+    if (hrs < 0) {
+        hrs = 0;
+        min = 0;
+        sec = 0;
+        days = days - 1;
+        if (days == 0) {
+            hrs = 23;
+            min = 59;
+            sec = 59;
+        }
+        else if (days < 0) {
+            days = -1;
+        }
+    }
+
+    if (days < 0 && hrs == 0 && min == 0 && sec == 0) {
+        if (document.getElementById("ctl00_Content_Main_endmessage").value == "") {
+            document.getElementById("ctl00_Content_Main_divCountdown").style.display = "none";
+        }
+        else {
+            document.getElementById("ctl00_Content_Main_lblCountdown").innerHTML = document.getElementById("ctl00_Content_Main_endmessage").value;
+            document.getElementById("ctl00_Content_Main_lblCountdownTime").innerHTML = "";
+        }
+
+    }
+    else {
+        var sHrs = hrs.toString();
+        if (sHrs.length == 1)
+            sHrs = "0" + sHrs;
+        var sMin = min.toString();
+        if (sMin.length == 1)
+            sMin = "0" + sMin;
+        var sSec = sec.toString();
+        if (sSec.length == 1)
+            sSec = "0" + sSec;
+        if (days <= 0)
+            document.getElementById("ctl00_Content_Main_lblCountdownTime").innerHTML = sHrs + ":" + sMin + ":" + sSec;
+        else
+            document.getElementById("ctl00_Content_Main_lblCountdownTime").innerHTML = days + "d " + sHrs + ":" + sMin + ":" + sSec;
+    }
+    setTimeout("Countdown(" + days + "," + hrs + "," + min + "," + sec + ")", 1000);
+}

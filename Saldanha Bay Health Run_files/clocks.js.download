@@ -1,0 +1,65 @@
+﻿var Waves = [];
+setInterval(UpdateClocks, 1000);
+
+function GetClocks(r) {
+    var i = 0;
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        url: url(),
+        success: function (data) {
+            Waves = data.ClockWaves;
+        },
+        error: function (response) {
+        }
+    })
+}
+
+function url() {
+    const params = new URLSearchParams(window.location.search);
+    const ciParams = new URLSearchParams([...params].map(([key, value]) => [key.toLowerCase(), value]));
+    const CId = ciParams.get("cid");
+    const RId = ciParams.get("rid");
+    const EId = ciParams.get("eid");
+    var x = window.location.protocol + '//' + window.location.host;
+    var u = x + '/api/waves.aspx?CId=' + CId + '&RId=' + RId + '&EId=' + EId;
+    return u;
+}
+
+function UpdateClocks()
+{
+    var i;
+    for (i = 0; i < 5; i++) {
+        const id = 'lblClock' + i;
+        const ClockElement = document.getElementById(id);
+        if (ClockElement != null) {
+            const s = ClockElement.innerHTML;
+            var time = new Date('1900-01-01 ' + s);
+            time = new Date(time.getTime() + 1000);
+            ClockElement.innerHTML = TimeLabel(time);
+        }
+    }
+}
+
+function TimeLabel(time) {
+    if (time != null && !isNaN(time)) {
+        var iDays = time.getDate();
+        var sHrs = time.getHours().toString();
+        if (sHrs.length == 1)
+            sHrs = "0" + sHrs;
+        var sMin = time.getMinutes().toString();
+        if (sMin.length == 1)
+            sMin = "0" + sMin;
+        var sSec = time.getSeconds().toString();
+        if (sSec.length == 1)
+            sSec = "0" + sSec;
+
+        if (iDays >= 2)
+            return (iDays - 1).toString() + "d+" + sHrs + ":" + sMin + ":" + sSec;
+        else
+            return sHrs + ":" + sMin + ":" + sSec;
+    }
+    else {
+        return null;
+    }
+}
